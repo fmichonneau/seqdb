@@ -173,7 +173,7 @@ import_annotations <- function(file, db_prefix="FMSL13_", ...) {
 
 if (FALSE) {
 
-con <- dbConnect(SQLite(), "20150828.lines_sequences.sqlite")
+con <- dbConnect(SQLite(), "20150903.lines_sequences.sqlite")
 
 create_database(con, db_structure)
 
@@ -182,9 +182,9 @@ plate_data <- list.files(path="importedData/", pattern="^plate_(.+)csv$",
 lapply(plate_data, function(x) add_data(con, table="plate_data", file=x))
 add_data(con, table="plate_tracking", file="importedData/tracking_info.csv")
 add_data(con, table="dictionary_phyla_id", file="importedData/dictionary_phyla_id.csv")
-dbWriteTable(conn=con, value=read.csv("20150407-all_uf.csv"), name="ufdb",
+dbWriteTable(conn=con, value=read.csv("20150903-alluf.csv"), name="ufdb",
              row.names=FALSE, overwrite=TRUE)
-import_fasta(file="fromMatt/FMSLI13_1-6_10-13.fasta", con=con, dry_run = FALSE)
+import_fasta(file="fromMatt/FMSLI_plates1-6_10-18_cleaned.fasta", con=con, dry_run = FALSE)
 
 dbDisconnect(con)
 
@@ -203,7 +203,7 @@ dbDisconnect(con)
 
 ##########################################
 
-matt_view_1 <- function(db_file = "20150828.lines_sequences.sqlite") {
+matt_view_1 <- function(db_file = "20150903.lines_sequences.sqlite") {
     con <- dbConnect(SQLite(), db_file)
     res <- dbGetQuery(conn=con, "
 SELECT plate_data.plate, plate_data.row, plate_data.column, plate_data.phylum, plate_data.ufid_unique, ufdb.taxon
@@ -220,7 +220,7 @@ WHERE plate_data.plate LIKE 'FMSL13_%';")
     write.csv(dat, file="/tmp/plate_matt.csv", row.names = FALSE)
 }
 
-lgustav_view <- function() { ## all echinos
+gustav_view <- function() { ## all echinos
     con <- dbConnect(SQLite(), "20150407.lines_sequences.sqlite")
     res <- dbSendQuery(conn = con,
                        "
